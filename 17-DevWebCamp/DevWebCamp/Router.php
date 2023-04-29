@@ -1,53 +1,66 @@
 <?php
-
 namespace MVC;
+class Router{
+    public $rutasGET = [];
+    public $rutasPOST = [];
+    public $rutasPUT = [];
+    public $rutasDELETE = [];
+    
 
-class Router
-{
-    public array $getRoutes = [];
-    public array $postRoutes = [];
-
-    public function get($url, $fn)
-    {
-        $this->getRoutes[$url] = $fn;
+    public function get($url, $fn){
+        $this->rutasGET[$url] = $fn;
     }
 
-    public function post($url, $fn)
-    {
-        $this->postRoutes[$url] = $fn;
+    public function post($url, $fn){
+        $this->rutasPOST[$url] = $fn;
     }
 
-    public function comprobarRutas()
-    {
+    public function put($url, $fn){
+        $this->rutasPUT[$url] = $fn;
+    }
 
-        $url_actual = $_SERVER['PATH_INFO'] ?? '/';
-        $method = $_SERVER['REQUEST_METHOD'];
+    public function delete($url, $fn){
+        $this->rutasDELETE[$url] = $fn;
+    }
 
-        if ($method === 'GET') {
-            $fn = $this->getRoutes[$url_actual] ?? null;
-        } else {
-            $fn = $this->postRoutes[$url_actual] ?? null;
+
+    public function comprobarRutas(){
+        $auth = $_SESSION['login'] ?? null;
+        
+        $urlActual = $_SERVER['REDIRECT_URL'] ?? '/';
+        $metodo = $_SERVER['REQUEST_METHOD'];
+        
+        
+        // Comprueba si el método es correcto
+        if($metodo === 'GET'){
+            $fn = $this->rutasGET[$urlActual] ?? null;
+        }else if($metodo === 'POST'){
+            $fn = $this->rutasPOST[$urlActual] ?? null;
+        }else if($metodo === 'PUT'){
+            $fn = $this->rutasPUT[$urlActual] ?? null;
+        }else if($metodo === 'DELETE'){
+            $fn = $this->rutasDELETE[$urlActual] ?? null;
+        }else{
+            $fn = false;
         }
-
-        if ( $fn ) {
+        
+        if(!$fn){
+            echo "Página no encontrada";
+        }else{
+            // La url existe y hay una función asociada
             call_user_func($fn, $this);
-        } else {
-            echo "Página No Encontrada o Ruta no válida";
         }
     }
 
-    public function render($view, $datos = [])
-    {
-        foreach ($datos as $key => $value) {
-            $$key = $value; 
+    public function render($view, $datos = [] ) {
+        foreach($datos as $key => $value){
+            $$key = $value;
         }
-
-        ob_start(); 
-
-        include_once __DIR__ . "/views/$view.php";
+        ob_start(); // Almacenamiento en memoria durante un momento...
+        include __DIR__."/views/$view.php";
 
         $contenido = ob_get_clean(); // Limpia el Buffer
 
-        include_once __DIR__ . '/views/layout.php';
+        include __DIR__."/views/layout.php";
     }
 }
