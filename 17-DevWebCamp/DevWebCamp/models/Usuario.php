@@ -5,6 +5,16 @@ namespace Model;
 class Usuario extends ActiveRecord {
     protected static $tabla = 'usuarios';
     protected static $columnasDB = ['id', 'nombre', 'apellido', 'email', 'password', 'confirmado', 'token', 'admin'];
+
+    public $id;
+    public $nombre;
+    public $apellido;
+    public $email;
+    public $password;
+    public $password2;
+    public $confirmado;
+    public $token;
+    public $admin;
     
     public function __construct($args = [])
     {
@@ -79,28 +89,53 @@ class Usuario extends ActiveRecord {
         return self::$alertas;
     }
 
-    public function nuevo_password() : array {
-        if(!$this->password_actual) {
-            self::$alertas['error'][] = 'El Password Actual no puede ir vacio';
-        }
-        if(!$this->password_nuevo) {
-            self::$alertas['error'][] = 'El Password Nuevo no puede ir vacio';
-        }
-        if(strlen($this->password_nuevo) < 6) {
-            self::$alertas['error'][] = 'El Password debe contener al menos 6 caracteres';
-        }
-        return self::$alertas;
-    }
+    /**
+	 * Función que permite cambiar el password, validando el nuevo password
+	 *
+	 * @param string $password_actual
+	 * @param string $password_nuevo
+	 * @return boolean
+	 */
+	public function nuevo_password(string $password_actual, string $password_nuevo): bool {
+		if(!$password_actual){
+			self::setAlerta('error', 'El Password Actual no puede ir vacío');
+		}
+		if(!$password_nuevo){
+			self::setAlerta('error', 'El Password Nuevo no puede ir vacío');
+		}
+		if(strlen($password_nuevo) < 6) {
+			self::$alertas['error'][] = 'El Password debe contener al menos 6 caracteres';
+		}
+		if($this->login($password_actual) && empty(self::$alertas)){
+			return $this->hashPassword($password_nuevo);
+		}else{
+			return false;
+		}
+	}
 
-    // Comprobar el password
-    public function comprobar_password() : bool {
-        return password_verify($this->password_actual, $this->password );
-    }
+    public function login(string $password): bool {
+		$ok = password_verify($password, $this->password);
+		if(!$ok){
+			self::setAlerta('error', 'Password Incorrecto');
+		}
+		return $ok;
+	}
 
-    // Hashea el password
-    public function hashPassword() : void {
-        $this->password = password_hash($this->password, PASSWORD_BCRYPT);
-    }
+    // // Comprobar el password
+    // public function comprobar_password() : bool {
+    //     return password_verify($this->password_actual, $this->password );
+    // }
+
+    public function hashPassword($nuevoPassword = null) {
+		if(!$nuevoPassword) $nuevoPassword = $this->password;
+		$password = password_hash($nuevoPassword, PASSWORD_DEFAULT);
+		if($password){
+			$this->password = $password;
+			return true;
+		}else{
+			return false;
+		}
+	}
 
     // Generar un Token
     public function crearToken() : void {
