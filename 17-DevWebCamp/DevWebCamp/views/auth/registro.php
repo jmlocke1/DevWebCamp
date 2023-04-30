@@ -1,7 +1,7 @@
 <main class="auth">
 	<h2 class="auth__heading"><?= $titulo; ?></h2>
 
-	<p class="auth__texto">Inicia sesión en DevWebcamp</p>
+	<p class="auth__texto">Regístrate en DevWebcamp</p>
 
 	<form action="" class="formulario">
 		<div class="formulario__campo">
