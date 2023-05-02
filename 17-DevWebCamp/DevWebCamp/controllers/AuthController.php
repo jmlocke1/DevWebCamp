@@ -13,27 +13,33 @@ class AuthController {
 
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
     
-            $usuario = new Usuario($_POST);
+            $auth = new Usuario($_POST);
 
-            $alertas = $usuario->validarLogin();
+            $alertas = $auth->validarLogin();
             
             if(empty($alertas)) {
                 // Verificar quel el usuario exista
-                $usuario = Usuario::where('email', $usuario->email);
+                $usuario = Usuario::where('email', $auth->email);
                 if(!$usuario || !$usuario->confirmado ) {
                     Usuario::setAlerta('error', 'El Usuario No Existe o no esta confirmado');
                 } else {
                     // El Usuario existe
-                    if( password_verify($_POST['password'], $usuario->password) ) {
+                    if( $usuario->login($auth->password) ) {
                         
                         // Iniciar la sesión
-                        session_start();    
+                        iniciar_sesion();    
                         $_SESSION['id'] = $usuario->id;
                         $_SESSION['nombre'] = $usuario->nombre;
                         $_SESSION['apellido'] = $usuario->apellido;
                         $_SESSION['email'] = $usuario->email;
                         $_SESSION['admin'] = $usuario->admin ?? null;
                         
+                        // Redirección
+                        if($usuario->admin){
+                            header('Location: /admin/dashboard');
+                        }else{
+                            header('Location: /finalizar-registro');
+                        }
                     } else {
                         Usuario::setAlerta('error', 'Password Incorrecto');
                     }
@@ -41,12 +47,10 @@ class AuthController {
             }
         }
 
-        $alertas = Usuario::getAlertas();
-        
         // Render a la vista 
         $router->render('auth/login', [
             'titulo' => 'Iniciar Sesión',
-            'alertas' => $alertas
+            'alertas' => Usuario::getAlertas()
         ]);
     }
 
@@ -171,7 +175,7 @@ class AuthController {
 
 
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
-
+            
             // Añadir el nuevo password
             $usuario->sincronizar($_POST);
 
@@ -190,7 +194,7 @@ class AuthController {
 
                 // Redireccionar
                 if($resultado) {
-                    header('Location: /');
+                    header('Location: /login');
                 }
             }
         }
@@ -223,7 +227,7 @@ class AuthController {
 
         if(empty($usuario)) {
             // No se encontró un usuario con ese token
-            Usuario::setAlerta('error', 'Token No Válido');
+            Usuario::setAlerta('error', 'Token No Válido. La cuenta no se confirmó');
         } else {
             // Confirmar la cuenta
             $usuario->confirmado = 1;

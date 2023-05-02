@@ -3,7 +3,9 @@
 
 	<p class="auth__texto">Inicia sesión en DevWebcamp</p>
 
-	<form action="" class="formulario">
+	<?php require_once __DIR__ . '/../templates/alertas.php' ?>
+	
+	<form method="POST" action="/login" class="formulario">
 		<div class="formulario__campo">
 			<label for="email" class="formulario__label">Email</label>
 			<input class="formulario__input" type="email" name="email" id="email" placeholder="Tu Email">
