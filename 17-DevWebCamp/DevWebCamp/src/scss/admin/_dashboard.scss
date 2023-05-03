@@ -97,6 +97,7 @@
 		@include m.tablet {
 			display: flex;
 			justify-content: flex-end;
+			margin-bottom: 5rem;
 		}
 	}
 
@@ -107,5 +108,17 @@
 		@include m.tablet {
 			width: auto;
 		}
+	}
+
+	&__contenedor {
+		@include m.shadow;
+		background-color: v.$blanco;
+		padding: 2rem;
+		border-radius: 1rem;
+	}
+
+	&__formulario {
+		@extend .dashboard__contenedor;
+		@include m.contenedor-md;
 	}
 }
