@@ -61,6 +61,13 @@ class Router{
 
         $contenido = ob_get_clean(); // Limpia el Buffer
 
-        include __DIR__."/views/layout.php";
+        // Utilizar el Layout de acuerdo a la URL
+        $urlActual = $_SERVER['REDIRECT_URL'] ?? '/';
+        if(str_contains($urlActual, '/admin')){
+            include __DIR__."/views/admin-layout.php";
+        }else{
+            include __DIR__."/views/layout.php";
+        }
+        
     }
 }
