@@ -744,7 +744,7 @@ h3 {
   padding: 2rem;
   transition: 300ms background-color ease-in-out, 300ms color ease, 300ms border-radius ease;
 }
-.dashboard__enlace:hover {
+.dashboard__enlace:hover, .dashboard__enlace--actual {
   background-color: #40587f;
   color: #FFFFFF;
   border-radius: 1rem;
@@ -765,6 +765,36 @@ h3 {
 @media (min-width: 768px) {
   .dashboard__contenido {
     padding: 1rem 5rem 3rem 5rem;
+  }
+}
+@media (min-width: 768px) {
+  .dashboard__contenedor-boton {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+.dashboard__boton {
+  background-color: #007df4;
+  padding: 1.5rem 4rem;
+  color: #FFFFFF;
+  font-size: 1.8rem;
+  font-weight: 700;
+  border: none;
+  transition-property: background-color;
+  transition-duration: 0.3s;
+  text-align: center;
+  width: 100%;
+  display: inline-block;
+  text-transform: uppercase;
+  font-size: 1.4rem;
+}
+.dashboard__boton:hover {
+  background-color: #0063c1;
+  cursor: pointer;
+}
+@media (min-width: 768px) {
+  .dashboard__boton {
+    width: auto;
   }
 }
 /*# sourceMappingURL=app.css.map */
