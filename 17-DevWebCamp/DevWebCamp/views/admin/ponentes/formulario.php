@@ -46,14 +46,21 @@
 		>
 	</div>
 	<div class="formulario__campo">
-		<label for="imagen" class="formulario__label">Imagen</label>
-		<input 
-			type="file" 
-			name="imagen" 
-			id="imagen" 
-			class="formulario__input formulario__input--file"
-		>
-	</div>
+        <label for="imagen" class="formulario__label">Imagen</label>
+        <input
+            type="file"
+            class="formulario__input formulario__input--file"
+            id="imagen"
+            name="imagen"
+        >
+    </div>
+	<?php if(isset($mostrarImagen)) { ?>
+		<p class="formulario__texto">Imagen Actual</p>
+		<div class="formulario__imagen">
+			<?= $ponente->getImagenHTML(); ?>
+		</div>
+
+	<?php } ?>
 </fieldset>
 
 <fieldset class="formulario__fieldset">
@@ -68,7 +75,7 @@
 			placeholder="Ej. Node.js, PHP, CSS, Laravel, UX / UI"
 		>
 		<div id="tags" class="formulario__listado"></div>
-		<input type="hidden" name="tags" value=""><?= $ponente->tags ?? ''; ?>
+		<input type="hidden" name="tags" value="<?= $ponente->tags ?? ''; ?>">
 	</div>
 </fieldset>
 
