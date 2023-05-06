@@ -421,6 +421,9 @@ h3 {
 .formulario__imagen {
   max-width: 20rem;
 }
+.formulario__imagen--mini {
+  max-width: 4rem;
+}
 .formulario__listado {
   margin: 0;
   padding: 0;

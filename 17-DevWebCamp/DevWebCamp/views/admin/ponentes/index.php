@@ -12,6 +12,7 @@
 		<table class="table">
 			<thead class="table__thead">
 				<tr>
+					<th scope="col" class="table__th">Imagen</th>
 					<th scope="col" class="table__th">Nombre</th>
 					<th scope="col" class="table__th">Ubicación</th>
 					<th scope="col" class="table__th"></th>
@@ -20,6 +21,11 @@
 			<tbody class="table__tbody">
 				<?php foreach($ponentes as $ponente){ ?>
 					<tr class="table__tr">
+						<td class="table__td">
+							<div class="formulario__imagen--mini">
+								<?= $ponente->getImagenHTML(); ?>
+							</div>
+						</td>
 						<td class="table__td">
 							<?= $ponente->nombre . " " . $ponente->apellido; ?>
 						</td>

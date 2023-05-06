@@ -22,34 +22,38 @@ class PonentesController {
 		$router->render('admin/ponentes/crear', [
 			'titulo' => 'Registrar Ponente',
 			'alertas' => Ponente::getAlertas(),
-			'ponente' => $ponente
+			'ponente' => $ponente,
+			'redes' => json_decode($ponente->redes)
 		]);
 	}
 
 	public static function crearPost(Router $router){
 		$ponente = new Ponente();
 		$ponente_data = $_POST;
-		// Leer imagen
-		if(!empty($_FILES['imagen']['tmp_name'])) {
-			$carpeta_imagenes = '../public/build/img/speakers';
-			// Crear la carpeta si no existe
-			if(!is_dir($carpeta_imagenes)){
-				mkdir($carpeta_imagenes, 0755, true);
-			}
-			$imagen_png = Image::make($_FILES['imagen']['tmp_name'])->fit(800,800)->encode('png', 80);
-			$imagen_webp = Image::make($_FILES['imagen']['tmp_name'])->fit(800,800)->encode('webp', 80);
+		// // Leer imagen
+		// if(!empty($_FILES['imagen']['tmp_name'])) {
+		// 	$carpeta_imagenes = '../public/build/img/speakers';
+		// 	// Crear la carpeta si no existe
+		// 	if(!is_dir($carpeta_imagenes)){
+		// 		mkdir($carpeta_imagenes, 0755, true);
+		// 	}
+		// 	$imagen_png = Image::make($_FILES['imagen']['tmp_name'])->fit(800,800)->encode('png', 80);
+		// 	$imagen_webp = Image::make($_FILES['imagen']['tmp_name'])->fit(800,800)->encode('webp', 80);
 
-			$nombre_imagen = md5( uniqid( rand(), true ) );
-			$ponente_data['imagen'] = $nombre_imagen;
-		}
+		// 	$nombre_imagen = md5( uniqid( rand(), true ) );
+		// 	$ponente_data['imagen'] = $nombre_imagen;
+		// }
+
 		$ponente_data['redes'] = json_encode($ponente_data['redes'], JSON_UNESCAPED_SLASHES);
 		$ponente->sincronizar($ponente_data);
+		$ponente->setImagen($_FILES['imagen']['tmp_name'] ?? '');
+		
 		$alertas = $ponente->validar();
 		// Guardar el registro
 		if(empty($alertas)){
-			// Guardar las imágenes
-			$imagen_png->save($carpeta_imagenes . '/' . $nombre_imagen . '.png');
-			$imagen_webp->save($carpeta_imagenes . '/' . $nombre_imagen . '.webp');
+			// // Guardar las imágenes
+			// $imagen_png->save($carpeta_imagenes . '/' . $nombre_imagen . '.png');
+			// $imagen_webp->save($carpeta_imagenes . '/' . $nombre_imagen . '.webp');
 			// Guardar en la BD
 			$resultado = $ponente->guardar();
 			if($resultado){
@@ -60,7 +64,8 @@ class PonentesController {
 		$router->render('admin/ponentes/crear', [
 			'titulo' => 'Registrar Ponente',
 			'alertas' => Ponente::getAlertas(),
-			'ponente' => $ponente
+			'ponente' => $ponente,
+			'redes' => json_decode($ponente->redes)
 		]);
 	}
 
@@ -80,7 +85,8 @@ class PonentesController {
 			'titulo' => 'Editar Ponente',
 			'alertas' => Ponente::getAlertas(),
 			'ponente' => $ponente,
-			'mostrarImagen' => true
+			'mostrarImagen' => true,
+			'redes' => json_decode($ponente->redes)
 		]);
 	}
 

@@ -64,6 +64,9 @@
 	}
 	&__imagen {
 		max-width: 20rem;
+		&--mini {
+			max-width: 4rem;
+		}
 	}
 	&__listado {
 		@include m.tags;
