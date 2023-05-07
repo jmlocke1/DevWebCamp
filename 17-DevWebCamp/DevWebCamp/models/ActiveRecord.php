@@ -194,6 +194,13 @@ public static function find(array|int $id) {
         return array_shift( $resultado ) ;
     }
 
+    public static function total():int {
+        $query = "SELECT COUNT(*) FROM " . static::$tabla;
+        $resultado = DB::query($query);
+        $total = $resultado->fetch_array();
+        return (int) array_shift($total);
+    }
+
     // Busca un registro por el valor de una columna
     public static function belongsTo($columna, $valor) {
         $query = "SELECT * FROM " . static::$tabla  ." WHERE {$columna} = '{$valor}'";
