@@ -46,7 +46,7 @@ class Ponente extends ActiveRecord {
 		if(!$this->pais) {
 			self::$alertas['error'][] = 'El Campo País es Obligatorio';
 		}
-		if(!$this->nuevaImagen) {
+		if(!$this->nuevaImagen && !$this->imagen) {
 			self::$alertas['error'][] = 'La imagen es obligatoria';
 		}
 		if(!$this->tags) {
@@ -82,6 +82,11 @@ class Ponente extends ActiveRecord {
 			}
 		}
 		return parent::guardar();
+	}
+
+	public function eliminar(){
+		$this->removeOldImage();
+		return parent::eliminar();
 	}
 
 	private function hayCarpetaImagenes(){
