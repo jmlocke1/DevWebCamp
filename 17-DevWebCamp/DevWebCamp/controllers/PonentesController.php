@@ -15,15 +15,18 @@ class PonentesController {
 			header('Location: /admin/ponentes?page=1');
 			die();
 		}
-		$registros_por_pagina = 10;
+		$registros_por_pagina = 4;
 		$total = Ponente::total();
 		$paginacion = new Paginacion($pagina_actual, $registros_por_pagina, $total);
-		$offset = $paginacion->offset();
-		debuguear($paginacion->pagina_siguiente());
-		$ponentes = Ponente::all();
+		if($paginacion->total_paginas() < $pagina_actual) {
+			header('Location: /admin/ponentes?page=1');
+			die();
+		}
+		$ponentes = Ponente::get($registros_por_pagina, $paginacion->offset());
 		$router->render('admin/ponentes/index', [
 			'titulo' => 'Ponentes / Conferencistas',
-			'ponentes' => $ponentes
+			'ponentes' => $ponentes,
+			'paginacion' => $paginacion->paginacion()
 		]);
 	}
 

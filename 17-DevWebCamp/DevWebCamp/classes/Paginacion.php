@@ -31,4 +31,44 @@ class Paginacion {
 		$siguiente = $this->pagina_actual + 1;
 		return ($siguiente <= $this->total_paginas()) ? $siguiente : false;
 	}
+
+	public function enlace_anterior(): string {
+		$html = '';
+		if($this->pagina_anterior()) {
+			$html .= "<a class=\"paginacion__enlace paginacion__enlace--texto\" href=\"?page={$this->pagina_anterior()}\">&laquo; Anterior </a>";
+		}
+		return $html;
+	}
+
+	public function enlace_siguiente(): string {
+		$html = '';
+		if($this->pagina_siguiente()) {
+			$html .= "<a class=\"paginacion__enlace paginacion__enlace--texto\" href=\"?page={$this->pagina_siguiente()}\">Siguiente &raquo;</a>";
+		}
+		return $html;
+	}
+
+	public function numeros_paginas(): string {
+		$html = '';
+		for($i = 1; $i <= $this->total_paginas(); $i++) {
+			if($i === $this->pagina_actual) {
+				$html .= "<span class=\"paginacion__enlace paginacion__enlace--actual\">{$i}</span>";
+			} else {
+				$html .= "<a class=\"paginacion__enlace paginacion__enlace--numero\" href=\"?page={$i}\">{$i}</a>";
+			}
+		}
+		return $html;
+	}
+
+	public function paginacion(): string {
+		$html = '';
+		if($this->total_registros > 1) {
+			$html .= '<div class="paginacion">';
+			$html .= $this->enlace_anterior();
+			$html .= $this->numeros_paginas();
+			$html .= $this->enlace_siguiente();
+			$html .= '</div>';
+		}
+		return $html;
+	}
 }
