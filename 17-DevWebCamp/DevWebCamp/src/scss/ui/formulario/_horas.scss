@@ -17,5 +17,20 @@
 			cursor: pointer;
 			background-color: lighten($color: v.$gris, $amount: 40%);
 		}
+
+		&--seleccionada {
+			@extend .horas__hora;
+			background-color: v.$azul;
+			color: v.$blanco;
+		}
+
+		&--deshabilitada {
+			@extend .horas__hora;
+			border: 1px solid v.$gris;
+			color: v.$gris;
+			&:hover {
+				cursor: not-allowed;
+			}
+		}
 	}
 }

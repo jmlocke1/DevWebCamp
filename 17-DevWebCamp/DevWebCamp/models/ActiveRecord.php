@@ -194,6 +194,18 @@ public static function find(array|int $id) {
         return array_shift( $resultado ) ;
     }
 
+    // Búsqueda Where con múltiples opciones
+    public static function whereArray($array = []) {
+        $query = "SELECT * FROM " . static::$tabla  ." WHERE";
+        $and = '';
+        foreach($array as $key => $value){
+            $query .= $and . " {$key}='{$value}'";
+            $and = " AND";
+        }
+        $resultado = self::consultarSQL($query);
+        return $resultado;
+    }
+
     public static function total():int {
         $query = "SELECT COUNT(*) FROM " . static::$tabla;
         $resultado = DB::query($query);
