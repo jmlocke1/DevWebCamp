@@ -71,11 +71,7 @@ class PonentesController {
 	public static function editar(Router $router){
 		solo_admin();
 		$ponente = self::getPonenteByGet();
-		if(!$ponente){
-			header('Location: /admin/ponentes');
-			die();
-		}
-		
+
 		$router->render('admin/ponentes/editar', [
 			'titulo' => 'Editar Ponente',
 			'alertas' => Ponente::getAlertas(),
@@ -88,10 +84,7 @@ class PonentesController {
 	public static function editarPost(Router $router){
 		solo_admin();
 		$ponente = self::getPonenteByGet();
-		if(!$ponente){
-			header('Location: /admin/ponentes');
-			die();
-		}
+		
 		$ponente_data = $_POST;
 		
 		$ponente_data['redes'] = json_encode($ponente_data['redes'], JSON_UNESCAPED_SLASHES);

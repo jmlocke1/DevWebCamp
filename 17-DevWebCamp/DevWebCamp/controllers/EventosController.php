@@ -13,6 +13,7 @@ use stdClass;
 
 class EventosController {
 	public static function index(Router $router){
+		solo_admin();
 		$pagina_actual = filter_var($_GET['page'], FILTER_VALIDATE_INT);
 		if(!$pagina_actual || $pagina_actual < 1) {
 			header('Location: /admin/eventos?page=1');
@@ -40,12 +41,14 @@ class EventosController {
 	}
 
 	public static function crear(Router $router) {
+		solo_admin();
 		$categorias = Categoria::all('ASC');
 		$dias = Dia::all('ASC');
 		$horas = Hora::all('ASC');
 		$evento = new Evento();
 
 		if($_SERVER['REQUEST_METHOD'] === 'POST') {
+			solo_admin();
 			$evento->sincronizar($_POST);
 			$alertas = $evento->validar();
 			if(empty($alertas)){
@@ -68,6 +71,7 @@ class EventosController {
 	}
 
 	public static function editar(Router $router) {
+		solo_admin();
 		$id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
 		if(!$id) {
 			header('Location: /admin/eventos');
@@ -82,6 +86,7 @@ class EventosController {
 			die();
 		}
 		if($_SERVER['REQUEST_METHOD'] === 'POST') {
+			solo_admin();
 			$evento->sincronizar($_POST);
 			$alertas = $evento->validar();
 			if(empty($alertas)){
@@ -101,5 +106,23 @@ class EventosController {
 			'evento' => $evento,
 			'alertas' => Categoria::getAlertas()
 		]);
+	}
+
+	public static function eliminar(){
+		solo_admin();
+		$id = filter_var($_POST['id'], FILTER_VALIDATE_INT);
+		if(!$id){
+			header('Location: /admin/eventos');
+			die();
+		}
+		$evento = Evento::find($id);
+		if(!isset($evento)){
+			header('Location: /admin/eventos');
+			die();
+		}
+		$resultado = $evento->eliminar();
+		if($resultado){
+			header('Location: /admin/eventos');
+		}
 	}
 }
