@@ -1,19 +1,48 @@
 (function() {
 	const $horas = document.querySelector('#horas');
 	if($horas){
-		let busqueda = {
-			categoria_id: '',
-			dia: ''
-		};
 		const 	$dias = document.querySelectorAll('[name="dia"]'),
 				$inputHiddenDia = document.querySelector('[name="dia_id"]'),
 				$inputHiddenHora = document.querySelector('[name="hora_id"]'),
 				$categoria = document.querySelector('[name="categoria_id"]'),
-				$categoriaOpciones = document.querySelectorAll('#categoria option');
+				$categoriaOpciones = document.querySelectorAll('#categoria option'),
+				$categoriaSeleccionada = document.querySelector('#categoria'),
+				$diaSeleccionado = document.querySelector('[name="dia"]:checked') || '';
+		let busqueda = {
+			categoria_id: +$categoriaSeleccionada.value || '',
+			dia: +$diaSeleccionado.value
+		};
 		
-		deselect();
+		try {
+			if(editar){
+				(async () => {
+					await buscarEventos();
+					activaHoraAEditar();
+				})();
+			}
+		} catch (error) {
+			// No estamos editando, por tanto, no hacemos nada
+		}
+		
 		$categoria.addEventListener('change', terminoBusqueda);
 		$dias.forEach(dia => dia.addEventListener('change', terminoBusqueda));
+
+		function activaHoraAEditar(selecciona = true) {
+			try {
+				const $categoriaEd = document.querySelector('#categoria'),
+						$dia = document.querySelector('[name="dia"]:checked');
+				
+				if(+$categoriaEd.value == editar.categoria && +$dia.value == editar.dia){
+					const $horaSeleccionada = document.querySelector(`[data-hora-id="${editar.hora}"]`);
+					$horaSeleccionada.classList.remove('horas__hora--deshabilitada');
+					if(selecciona) $horaSeleccionada.classList.add('horas__hora--seleccionada');
+					$horaSeleccionada.onclick = seleccionarHora;
+				}
+
+			} catch (error) {
+				return; // No estamos editando
+			}
+		}
 
 		function deselect(){
 			$dias.forEach( dia => dia.checked = false);
@@ -43,7 +72,7 @@
 			const url = `/api/eventos-horario?dia_id=${dia}&categoria_id=${categoria_id}`;
 			const resultado = await fetch(url);
 			const eventos = await resultado.json();
-			
+			console.log("Eventos desde la base de datos", eventos)
 			obtenerHorasDisponibles(eventos);
 		}
 
@@ -63,7 +92,8 @@
 			Array.from($horasNoDisponibles).map( hora => hora.removeEventListener('click', seleccionarHora));
 
 			const $horasDisponibles = document.querySelectorAll('#horas li:not(.horas__hora--deshabilitada)');
-			$horasDisponibles.forEach( hora => hora.addEventListener('click', seleccionarHora))
+			$horasDisponibles.forEach( hora => hora.addEventListener('click', seleccionarHora));
+			activaHoraAEditar(false);
 		}
 
 		function seleccionarHora(e) {

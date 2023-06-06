@@ -1,6 +1,8 @@
 <?php
 namespace Model;
 use Model\Database\DB;
+use stdClass;
+
 class ActiveRecord {
 
     // Base DE DATOS
@@ -148,6 +150,23 @@ class ActiveRecord {
                 $this->$key = $value;
             }
         }
+    }
+
+    /**
+     * Devuelve un objeto estándar con las propiedades de este objeto. Al ser un objeto estándar se le
+     * pueden añadir nuevas propiedades dinámicamente sin problema
+     *
+     * @return stdClass
+     */
+    public function getStdClass(): stdClass {
+        $object = new stdClass;
+
+        foreach (static::$columnasDB as $column) {
+            if(property_exists($this, $column)){
+                $object->$column = $this->$column;
+            }
+        }
+        return $object;
     }
 
     // Registros - CRUD

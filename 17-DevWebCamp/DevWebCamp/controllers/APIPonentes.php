@@ -9,4 +9,15 @@ class APIPonentes {
 		$ponentes = Ponente::all();
 		echo json_encode($ponentes);
 	}
+
+	public static function ponente() {
+		$id = filter_var($_GET['id'], FILTER_VALIDATE_INT);
+		if(!$id || $id < 1) {
+			echo json_encode([]);
+			return;
+		}
+
+		$ponente = Ponente::find($id);
+		echo json_encode($ponente, JSON_UNESCAPED_SLASHES);
+	}
 }

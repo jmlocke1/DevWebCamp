@@ -15,7 +15,7 @@ class PonentesController {
 			header('Location: /admin/ponentes?page=1');
 			die();
 		}
-		$registros_por_pagina = 4;
+		$registros_por_pagina = 6;
 		$total = Ponente::total();
 		$paginacion = new Paginacion($pagina_actual, $registros_por_pagina, $total);
 		if($paginacion->total_paginas() < $pagina_actual) {

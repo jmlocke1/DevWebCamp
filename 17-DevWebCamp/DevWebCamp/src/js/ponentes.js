@@ -6,14 +6,32 @@
 		const $listadoPonentes = document.querySelector('#listado-ponentes'),
 			$ponenteHidden = document.querySelector('[name="ponente_id"]');
 		obtenerPonentes();
-
 		$ponentesInput.addEventListener('input', buscarPonentes);
+
+		if($ponenteHidden.value) {
+			(async () => {
+				const ponente = await obtenerPonente($ponenteHidden.value);
+				const {nombre, apellido} = ponente;
+				// Insertar en el HTML
+				const $ponente = document.createElement('LI');
+				$ponente.classList.add('listado-ponentes__ponente', 'listado-ponentes__ponente--seleccionado');
+				$ponente.textContent = `${nombre} ${apellido}`;
+				$listadoPonentes.appendChild($ponente);
+			})();
+		}
 
 		async function obtenerPonentes() {
 			const url = `/api/ponentes`;
 			const respuesta = await fetch(url);
 			const resultado = await respuesta.json();
 			formatearPonentes(resultado);
+		}
+
+		async function obtenerPonente(id) {
+			const url = `/api/ponente?id=${id}`;
+			const respuesta = await fetch(url);
+			const resultado = await respuesta.json();
+			return resultado;
 		}
 
 		function formatearPonentes(arrayPonentes = []) {
