@@ -213,6 +213,13 @@ public static function find(array|int $id) {
         return array_shift( $resultado ) ;
     }
 
+    // Retornar los registros por un orden
+    public static function ordenar($columna, $orden) {
+        $query = "SELECT * FROM " . static::$tabla  ." ORDER BY {$columna} {$orden}";
+        $resultado = self::consultarSQL($query);
+        return $resultado;
+    }
+
     // Búsqueda Where con múltiples opciones
     public static function whereArray($array = []) {
         $query = "SELECT * FROM " . static::$tabla  ." WHERE";
