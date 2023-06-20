@@ -1,8 +1,11 @@
 function paginaActual(){
-	const urlActual = window.location;
-	const enlace = document.querySelector(`a[href="${urlActual.pathname}"]`);
+	const urlActual = window.location.pathname;
+	const isAdmin = urlActual.includes('admin');
+	const classToAdd = isAdmin ? 'dashboard__enlace--actual' : 'navegacion__enlace--actual';
+	const typeNavigation = isAdmin ? '.dashboard__menu' : '.navegacion';
+	const enlace = document.querySelector(`${typeNavigation} a[href="${urlActual}"]`);
 	if(enlace){
-		enlace.classList.add('dashboard__enlace--actual');
+		enlace.classList.add(classToAdd);
 	}
 }
 

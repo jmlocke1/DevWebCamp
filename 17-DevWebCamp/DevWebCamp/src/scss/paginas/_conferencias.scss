@@ -23,6 +23,17 @@
 		#{$modificador}__heading {
 			color: v.$secundario;
 		}
+
+		.evento__informacion {
+			background-color: v.$secundario;
+			&:hover {
+				background-color: darken(v.$secundario, 10%);
+			}
+		}
+	}
+	.swiper-button-next,
+	.swiper-button-prev {
+		color: rgba($color: v.$blanco, $alpha: .7);
 	}
 }
 
@@ -41,6 +52,14 @@
 		}
 	}
 
+	&__nombre {
+		font-size: 2rem;
+		margin: 0;
+		display: -webkit-box;
+		-webkit-line-clamp: 1;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
 	&__introduccion {
 		font-size: 1.6rem;
 		display: -webkit-box;

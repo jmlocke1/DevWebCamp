@@ -18,6 +18,9 @@ function s($html) : string {
     return $s;
 }
 
+function pagina_actual($path) {
+    return str_contains( $_SERVER['PATH_INFO'], $path) ? true : false;
+}
 function iniciar_sesion(){
     if(!isset($_SESSION)) {
         session_start();

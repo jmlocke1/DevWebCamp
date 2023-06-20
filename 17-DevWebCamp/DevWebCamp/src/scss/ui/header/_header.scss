@@ -25,6 +25,12 @@
 	&__enlace {
 		@include m.enlace;
 	}
+	&__form {
+		display: flex
+	}
+	&__submit {
+		@extend .header__enlace;
+	}
 
 	&__contenido {
 		padding-top: 10rem;
