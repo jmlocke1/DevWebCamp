@@ -1,5 +1,5 @@
 <main class="agenda">
-	<h2 class="agenda__heading"><?= $titulo; ?></h2>
+	<h2 class="agenda__heading">Workshops y Conferencias</h2>
 	<p class="agenda__descripcion">Talleres y Conferencias dictados por expertos en desarrollo web</p>
 
 	<div class="eventos">

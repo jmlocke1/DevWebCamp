@@ -11,9 +11,19 @@ use Model\Categoria;
 
 class PaginasController {
 	public static function index(Router $router) {
-
+		// Obtener el total de cada bloque
+		$ponentes_total = Ponente::total();
+		$conferencias_total = Evento::total('categoria_id', 1);
+		$workshops_total = Evento::total('categoria_id', 2);
+		$ponentes = Ponente::all();
+		
 		$router->render('paginas/index', [
-			'titulo' => 'Inicio'
+			'titulo' => 'Inicio',
+			'eventos' => self::getEventosFormateados(),
+			'ponentes_total' => $ponentes_total,
+			'conferencias_total' => $conferencias_total,
+			'workshops_total' => $workshops_total,
+			'ponentes' => $ponentes
 		]);
 	}
 
@@ -32,6 +42,15 @@ class PaginasController {
 	}
 
 	public static function conferencias(Router $router) {
+		
+		
+		$router->render('paginas/conferencias', [
+			'titulo' => 'Conferencias & Workshops',
+			'eventos'  => self::getEventosFormateados()
+		]);
+	}
+
+	private static function getEventosFormateados() {
 		$eventos = Evento::ordenar('hora_id', 'ASC');
 
 		$eventos_formateados = [];
@@ -54,10 +73,6 @@ class PaginasController {
 				$eventos_formateados['workshops']['sabado'][] = $object;
 			}
 		}
-		
-		$router->render('paginas/conferencias', [
-			'titulo' => 'Conferencias & Workshops',
-			'eventos'  => $eventos_formateados
-		]);
+		return $eventos_formateados;
 	}
 }

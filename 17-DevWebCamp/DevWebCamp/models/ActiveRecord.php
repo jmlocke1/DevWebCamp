@@ -232,8 +232,11 @@ public static function find(array|int $id) {
         return $resultado;
     }
 
-    public static function total():int {
+    public static function total($columna = '', $valor = ''):int {
         $query = "SELECT COUNT(*) FROM " . static::$tabla;
+        if($columna){
+            $query .= " WHERE {$columna} = {$valor}";
+        }
         $resultado = DB::query($query);
         $total = $resultado->fetch_array();
         return (int) array_shift($total);
