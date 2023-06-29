@@ -131,13 +131,13 @@ class Ponente extends ActiveRecord {
 		}
 		if(file_exists(self::ABSOLUTE_IMAGE_FOLDER . $this->imagen . '.png')){
 			$alt = "Imagen de {$this->nombre} {$this->apellido}";
-			$png = "<img loading='lazy' src='". self::IMAGE_FOLDER . $this->imagen .".png' alt='$alt' title='$alt'>";
+			$png = "<img$class loading='lazy' src='". self::IMAGE_FOLDER . $this->imagen .".png' alt='$alt' title='$alt'>";
 		}else{
 			// Si no existe en png, no se devuelve nada
 			return '';
 		}
 		$img = <<<PRE
-	<picture$class>
+	<picture>
 		$avif
 		$webp
 		$png

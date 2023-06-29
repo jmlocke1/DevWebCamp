@@ -24,68 +24,70 @@
 <section class="speakers">
 	<h2 class="speakers__heading">Speakers</h2>
 	<p class="speakers__descripcion">Conoce a nuestros expertos de DevWebCamp</p>
+	<div class="speakers__grid">
+		<?php foreach ($ponentes as $ponente) {  ?>
+			<div class="speaker">
+				<?= $ponente->getImagenHTML("speaker__imagen"); ?>
+				<div class="speaker__informacion">
+					<h4 class="speaker__nombre"><?= $ponente->nombre . ' ' . $ponente->apellido; ?></h4>
 
-	<?php foreach ($ponentes as $ponente) {  ?>
-		<div class="speaker">
-			<?= $ponente->getImagenHTML("speaker__imagen"); ?>
-		</div>
-		<div class="speaker__informacion">
-			<h4 class="speaker__nombre"><?= $ponente->nombre . ' ' . $ponente->apellido; ?></h4>
+					<p class="speaker__ubicacion"><?= $ponente->ciudad . ', ' . $ponente->pais; ?></p>
 
-			<p class="speaker__ubicacion"><?= $ponente->ciudad . ', ' . $ponente->pais; ?></p>
-
-			<nav class="speaker__sociales">
-				<?php 
-					$redes = json_decode( $ponente->redes );
-				 ?>
-				<?php if(!empty($redes->facebook)){ ?>
-					<a class="speaker__enlace" rel="noopener noreferrer" target="_blank" href="<?= $redes->facebook; ?>">
-						<span class="speaker__ocultar">Facebook</span>
-					</a>
-				<?php } 
-					if(!empty($redes->twitter)) {
-				?>
-					<a class="speaker__enlace" rel="noopener noreferrer" target="_blank" href="<?= $redes->twitter; ?>">
-						<span class="speaker__ocultar">Twitter</span>
-					</a>
-				<?php 
-					}
-					if(!empty($redes->youtube)) {
-				?>
-					<a class="speaker__enlace" rel="noopener noreferrer" target="_blank" href="<?= $redes->youtube; ?>">
-						<span class="speaker__ocultar">YouTube</span>
-					</a>
-				<?php 
-					}
-					if(!empty($redes->instagram)) {
-				 ?>
-					<a class="speaker__enlace" rel="noopener noreferrer" target="_blank" href="<?= $redes->instagram; ?>">
-						<span class="speaker__ocultar">Instagram</span>
-					</a>
-				<?php 
-					}
-					if(!empty($redes->tiktok)) {
-				 ?>
-					<a class="speaker__enlace" rel="noopener noreferrer" target="_blank" href="<?= $redes->tiktok; ?>">
-						<span class="speaker__ocultar">Tiktok</span>
-					</a>
-				<?php 
-					}
-					if(!empty($redes->github)) {
-				 ?>
-					<a class="speaker__enlace" rel="noopener noreferrer" target="_blank" href="<?= $redes->github; ?>">
-						<span class="speaker__ocultar">Github</span>
-					</a>
-				<?php } ?>
-			</nav>
-			<ul class="speaker__listado-skills">
-				<?php 
-					$tags = explode(',', $ponente->tags);
-					foreach ($tags as $tag) {
-				?>
-					<li class="speaker__skill"><?= $tag; ?></li>
-				<?php } ?>
-			</ul>
-		</div>
-	<?php } ?>
+					<nav class="speaker-sociales">
+						<?php 
+							$redes = json_decode( $ponente->redes );
+						?>
+						<?php if(!empty($redes->facebook)){ ?>
+							<a class="speaker-sociales__enlace" rel="noopener noreferrer" target="_blank" href="<?= $redes->facebook; ?>">
+								<span class="speaker-sociales__ocultar">Facebook</span>
+							</a>
+						<?php } 
+							if(!empty($redes->twitter)) {
+						?>
+							<a class="speaker-sociales__enlace" rel="noopener noreferrer" target="_blank" href="<?= $redes->twitter; ?>">
+								<span class="speaker-sociales__ocultar">Twitter</span>
+							</a>
+						<?php 
+							}
+							if(!empty($redes->youtube)) {
+						?>
+							<a class="speaker-sociales__enlace" rel="noopener noreferrer" target="_blank" href="<?= $redes->youtube; ?>">
+								<span class="speaker-sociales__ocultar">YouTube</span>
+							</a>
+						<?php 
+							}
+							if(!empty($redes->instagram)) {
+						?>
+							<a class="speake-socialesr__enlace" rel="noopener noreferrer" target="_blank" href="<?= $redes->instagram; ?>">
+								<span class="speaker-sociales__ocultar">Instagram</span>
+							</a>
+						<?php 
+							}
+							if(!empty($redes->tiktok)) {
+						?>
+							<a class="speaker-sociales__enlace" rel="noopener noreferrer" target="_blank" href="<?= $redes->tiktok; ?>">
+								<span class="speaker-sociales__ocultar">Tiktok</span>
+							</a>
+						<?php 
+							}
+							if(!empty($redes->github)) {
+						?>
+							<a class="speaker-sociales__enlace" rel="noopener noreferrer" target="_blank" href="<?= $redes->github; ?>">
+								<span class="speaker-sociales__ocultar">Github</span>
+							</a>
+						<?php } ?>
+					</nav>
+					<ul class="speaker__listado-skills">
+						<?php 
+							$tags = explode(',', $ponente->tags);
+							foreach ($tags as $tag) {
+						?>
+							<li class="speaker__skill"><?= $tag; ?></li>
+						<?php } ?>
+					</ul>
+				</div>
+			</div>
+			
+		<?php } ?>
+	</div>
 </section>
