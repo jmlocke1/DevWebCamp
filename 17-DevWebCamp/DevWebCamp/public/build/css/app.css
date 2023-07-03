@@ -602,7 +602,7 @@ h3 {
   background-image: image-set(url("../img/bg_4.avif") 1x, url("../img/bg_4.webp") 1x, url("../img/bg_4.png") 1x);
 }
 .speaker__imagen {
-  min-width: 350px;
+  min-width: 150px;
 }
 .speaker__ubicacion {
   color: #64748B;
@@ -662,6 +662,19 @@ h3 {
 }
 .speaker-sociales__ocultar {
   display: none;
+}
+
+.mapa {
+  height: 45rem;
+  margin-top: 5rem;
+}
+.mapa__heading {
+  margin: 0;
+  text-align: left;
+}
+.mapa__texto {
+  font-size: 1.8rem;
+  margin: 0;
 }
 
 .formulario {

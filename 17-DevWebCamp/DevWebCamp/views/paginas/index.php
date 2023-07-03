@@ -91,3 +91,5 @@
 		<?php } ?>
 	</div>
 </section>
+
+<div id="map" class="mapa"></div>
