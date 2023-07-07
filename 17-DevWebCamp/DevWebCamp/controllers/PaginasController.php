@@ -75,4 +75,10 @@ class PaginasController {
 		}
 		return $eventos_formateados;
 	}
+
+	public static function notFound(Router $router) {
+		$router->render('paginas/notfound', [
+			'titulo' => 'Página no encontrada'
+		]);
+	}
 }

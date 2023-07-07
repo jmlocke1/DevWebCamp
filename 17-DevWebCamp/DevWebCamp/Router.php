@@ -44,11 +44,11 @@ class Router{
             $fn = false;
         }
         
-        if(!$fn){
-            echo "Página no encontrada";
-        }else{
+        if($fn){
             // La url existe y hay una función asociada
             call_user_func($fn, $this);
+        }else{
+            header('Location: /404');
         }
     }
 
