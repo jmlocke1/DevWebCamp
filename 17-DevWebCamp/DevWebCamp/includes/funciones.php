@@ -43,3 +43,10 @@ function solo_admin() {
         die();
     }
 }
+
+
+function aos_animacion() : string {
+    $efectos = ['fade-up', 'fade-down', 'fade-left', 'fade-right', 'flip-left', 'flip-right', 'zoom-in', 'zoom-in-up', 'zoom-in-down', 'zoom-out'];
+    $efecto = array_rand($efectos, 1);
+    return 'data-aos="'.$efectos[$efecto].'"';
+}

@@ -2,19 +2,19 @@
 
 <section class="resumen">
 	<div class="resumen__grid">
-		<div class="resumen__bloque">
+		<div data-aos="fade-up" class="resumen__bloque">
 			<p class="resumen__texto resumen__texto--numero"><?= $ponentes_total; ?></p>
 			<p class="resumen__texto">Speakers</p>
 		</div>
-		<div class="resumen__bloque">
+		<div data-aos="fade-down" class="resumen__bloque">
 			<p class="resumen__texto resumen__texto--numero"><?= $conferencias_total; ?></p>
 			<p class="resumen__texto">Conferencias</p>
 		</div>
-		<div class="resumen__bloque">
+		<div data-aos="fade-right" class="resumen__bloque">
 			<p class="resumen__texto resumen__texto--numero"><?= $workshops_total; ?></p>
 			<p class="resumen__texto">Workshops</p>
 		</div>
-		<div class="resumen__bloque">
+		<div data-aos="fade-left" class="resumen__bloque">
 			<p class="resumen__texto resumen__texto--numero">500</p>
 			<p class="resumen__texto">Asistentes</p>
 		</div>
@@ -26,7 +26,7 @@
 	<p class="speakers__descripcion">Conoce a nuestros expertos de DevWebCamp</p>
 	<div class="speakers__grid">
 		<?php foreach ($ponentes as $ponente) {  ?>
-			<div class="speaker">
+			<div <?= aos_animacion(); ?> class="speaker">
 				<?= $ponente->getImagenHTML("speaker__imagen"); ?>
 				<div class="speaker__informacion">
 					<h4 class="speaker__nombre"><?= $ponente->nombre . ' ' . $ponente->apellido; ?></h4>
@@ -99,17 +99,17 @@
 	<p class="boletos__descripcion">Precios para DevWebCamp</p>
 
 	<div class="boletos__grid">
-		<div class="boleto boleto--presencial">
+		<div <?= aos_animacion(); ?> class="boleto boleto--presencial">
 			<p class="boleto__logo">&#60;DevWebCamp/></p>
 			<p class="boleto__plan">Presencial</p>
 			<p class="boleto__precio">199 €</p>
 		</div>
-		<div class="boleto boleto--virtual">
+		<div <?= aos_animacion(); ?> class="boleto boleto--virtual">
 			<p class="boleto__logo">&#60;DevWebCamp/></p>
 			<p class="boleto__plan">Virtual</p>
 			<p class="boleto__precio">49 €</p>
 		</div>
-		<div class="boleto boleto--gratis">
+		<div <?= aos_animacion(); ?> class="boleto boleto--gratis">
 			<p class="boleto__logo">&#60;DevWebCamp/></p>
 			<p class="boleto__plan">Gratis</p>
 			<p class="boleto__precio">Gratis - 0 €</p>
