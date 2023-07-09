@@ -29,7 +29,7 @@ function iniciar_sesion(){
 
 function is_auth() : bool {
     iniciar_sesion();
-    return isset($_SESSION['nombre']) && !empty($_SESSION);
+    return !empty($_SESSION) && isset($_SESSION['nombre']);
 }
 
 function is_admin() : bool {
@@ -39,6 +39,13 @@ function is_admin() : bool {
 
 function solo_admin() {
     if(!is_admin()){
+        header('Location: /login');
+        die();
+    }
+}
+
+function solo_auth() {
+    if(!is_auth()) {
         header('Location: /login');
         die();
     }

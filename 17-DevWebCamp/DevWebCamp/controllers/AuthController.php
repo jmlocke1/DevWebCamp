@@ -8,45 +8,46 @@ use MVC\Router;
 
 class AuthController {
     public static function login(Router $router) {
+        // Render a la vista 
+        $router->render('auth/login', [
+            'titulo' => 'Iniciar Sesión',
+            'alertas' => Usuario::getAlertas()
+        ]);
+    }
 
-        $alertas = [];
+    public static function loginpost(Router $router) {
+        $auth = new Usuario($_POST);
 
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
-    
-            $auth = new Usuario($_POST);
-
-            $alertas = $auth->validarLogin();
-            
-            if(empty($alertas)) {
-                // Verificar quel el usuario exista
-                $usuario = Usuario::where('email', $auth->email);
-                if(!$usuario || !$usuario->confirmado ) {
-                    Usuario::setAlerta('error', 'El Usuario No Existe o no esta confirmado');
-                } else {
-                    // El Usuario existe
-                    if( $usuario->login($auth->password) ) {
-                        
-                        // Iniciar la sesión
-                        iniciar_sesion();    
-                        $_SESSION['id'] = $usuario->id;
-                        $_SESSION['nombre'] = $usuario->nombre;
-                        $_SESSION['apellido'] = $usuario->apellido;
-                        $_SESSION['email'] = $usuario->email;
-                        $_SESSION['admin'] = $usuario->admin ?? null;
-                        
-                        // Redirección
-                        if($usuario->admin){
-                            header('Location: /admin/dashboard');
-                        }else{
-                            header('Location: /finalizar-registro');
-                        }
-                    } else {
-                        Usuario::setAlerta('error', 'Password Incorrecto');
+        $alertas = $auth->validarLogin();
+        
+        if(empty($alertas)) {
+            // Verificar quel el usuario exista
+            $usuario = Usuario::where('email', $auth->email);
+            if(!$usuario || !$usuario->confirmado ) {
+                Usuario::setAlerta('error', 'El Usuario No Existe o no esta confirmado');
+            } else {
+                // El Usuario existe
+                if( $usuario->login($auth->password) ) {
+                    
+                    // Iniciar la sesión
+                    iniciar_sesion();    
+                    $_SESSION['id'] = $usuario->id;
+                    $_SESSION['nombre'] = $usuario->nombre;
+                    $_SESSION['apellido'] = $usuario->apellido;
+                    $_SESSION['email'] = $usuario->email;
+                    $_SESSION['admin'] = $usuario->admin ?? null;
+                    
+                    // Redirección
+                    if($usuario->admin){
+                        header('Location: /admin/dashboard');
+                    }else{
+                        header('Location: /finalizar-registro');
                     }
+                } else {
+                    Usuario::setAlerta('error', 'Password Incorrecto');
                 }
             }
         }
-
         // Render a la vista 
         $router->render('auth/login', [
             'titulo' => 'Iniciar Sesión',

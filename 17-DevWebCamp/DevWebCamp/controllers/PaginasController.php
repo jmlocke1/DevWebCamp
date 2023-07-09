@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Classes\Pass;
 use Model\Dia;
 use Model\Hora;
 use MVC\Router;
@@ -37,7 +38,8 @@ class PaginasController {
 	public static function paquetes(Router $router) {
 
 		$router->render('paginas/paquetes', [
-			'titulo' => 'Paquetes DevWebCamp'
+			'titulo' => 'Paquetes DevWebCamp',
+			'pass' => Pass::class
 		]);
 	}
 

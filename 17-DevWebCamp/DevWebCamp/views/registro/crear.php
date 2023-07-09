@@ -1,7 +1,6 @@
-<main class="paquetes">
-	<h2 class="paquetes__heading"><?= $titulo; ?></h2>
-
-	<p class="paquetes__descripcion">Compara los paquetes de DevWebCamp</p>
+<div class="registro">
+	<h2 class="registro__heading"><?= $titulo; ?></h2>
+	<p class="registro__descripcion">Elige tu plan</p>
 
 	<div class="paquetes__grid">
 		<div <?= aos_animacion(); ?> class="paquete">
@@ -10,6 +9,10 @@
 				<li class="paquete__elemento">Acceso Virtual a DevWebCamp</li>
 			</ul>
 			<p class="paquete__precio">$<?= $pass::FREE_PASS; ?></p>
+
+			<form action="/finalizar-registro/gratis" method="post">
+				<input type="submit" value="Inscripción Gratis" class="paquetes__submit">
+			</form>
 		</div>
 		<div <?= aos_animacion(); ?> class="paquete">
 			<h3 class="paquete__nombre">Pase Presencial</h3>
@@ -34,4 +37,4 @@
 			<p class="paquete__precio">$<?= $pass::VIRTUAL_PASS; ?></p>
 		</div>
 	</div>
-</main>
+</div>

@@ -8,7 +8,7 @@ class Ponente extends ActiveRecord {
     protected static $columnasDB = ['id', 'nombre', 'apellido', 'ciudad', 'pais', 'imagen', 'tags', 'redes'];
 	const IMAGE_FOLDER = '/build/img/speakers/';
 	const ABSOLUTE_IMAGE_FOLDER = DIR_ROOT . '/public' . self::IMAGE_FOLDER;
-    public $id;
+    
     public $nombre;
     public $apellido;
     public $ciudad;

@@ -12,13 +12,14 @@ use Controllers\PonentesController;
 use Controllers\DashboardController;
 use Controllers\PaginasController;
 use Controllers\RegistradosController;
+use Controllers\RegistroController;
 
 $router = new Router();
 
 
 // Login
 $router->get('/login', [AuthController::class, 'login']);
-$router->post('/login', [AuthController::class, 'login']);
+$router->post('/login', [AuthController::class, 'loginpost']);
 $router->post('/logout', [AuthController::class, 'logout']);
 
 // Crear Cuenta
@@ -64,6 +65,12 @@ $router->get('/api/eventos-horario', [APIEventos::class, 'index']);
 $router->get('/api/ponentes', [APIPonentes::class, 'index']);
 $router->get('/api/ponente', [APIPonentes::class, 'ponente']);
 
+// Registro de Usuarios
+$router->get('/finalizar-registro', [RegistroController::class, 'crear']);
+$router->post('/finalizar-registro/gratis', [RegistroController::class, 'gratis']);
+
+// Boleto virtual
+$router->get('/boleto', [RegistroController::class, 'boleto']);
 
 // Área Pública
 $router->get('/', [PaginasController::class, 'index']);

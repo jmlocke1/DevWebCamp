@@ -5,6 +5,13 @@ use stdClass;
 
 class ActiveRecord {
 
+    /**
+     * Identificador del modelo. Se declara aquí porque todos los modelos tienen un id, independientemente
+     * de que sea un buen diseño o no
+     *
+     * @var [type]
+     */
+    public $id;
     // Base DE DATOS
     protected static $db;
     protected static $tabla = '';
