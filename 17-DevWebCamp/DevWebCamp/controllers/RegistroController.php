@@ -4,6 +4,8 @@ namespace Controllers;
 
 use MVC\Router;
 use Classes\Pass;
+use Model\Paquete;
+use Model\Usuario;
 use Model\Registro;
 
 class RegistroController {
@@ -39,11 +41,23 @@ class RegistroController {
 		$id = $_GET['id'];
 		
 		if(!$id || !strlen($id) === 8){
-			debuguear("Token no válido");
+			header('Location: /');
+			return;
 		}
+
+		// Buscarlo en la BD
+		$registro = Registro::where('token', $id)->getStdClass();
+		$registro->usuario = Usuario::find($registro->usuario_id);
+		$registro->paquete = Paquete::find($registro->paquete_id);
+		
+		if(!$registro){
+			header('Location: /');
+		}
+
 		$router->render('registro/boleto', [
 			'titulo' => 'Asistencia a DevWebCamp',
-			'pass' => Pass::class
+			'pass' => Pass::class,
+			'registro' => $registro
 		]);
 	}
 }
