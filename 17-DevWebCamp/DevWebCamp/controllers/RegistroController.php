@@ -11,6 +11,12 @@ use Model\Registro;
 class RegistroController {
 	public static function crear(Router $router){
 		solo_auth();
+		// Verificar si el usuario ya está registrado
+		$registro = Registro::where('usuario_id', $_SESSION['id']);
+		if(isset($registro)) {
+			debuguear("Está registrado");
+		}
+		debuguear($registro);
 		$router->render('registro/crear', [
 			'titulo' => 'Finalizar Registro',
 			'pass' => Pass::class
