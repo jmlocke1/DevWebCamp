@@ -13,10 +13,11 @@ class RegistroController {
 		solo_auth();
 		// Verificar si el usuario ya está registrado
 		$registro = Registro::where('usuario_id', $_SESSION['id']);
-		if(isset($registro)) {
-			debuguear("Está registrado");
+		if(isset($registro) && $registro->paquete_id === Paquete::GRATIS) {
+			header('Location: /boleto?id=' . urlencode($registro->token));
+			exit;
 		}
-		debuguear($registro);
+		
 		$router->render('registro/crear', [
 			'titulo' => 'Finalizar Registro',
 			'pass' => Pass::class
@@ -27,6 +28,12 @@ class RegistroController {
 		solo_auth();
 		$token = substr(md5(uniqid( rand(), true)), 0, 8);
 
+		// Verificar si el usuario ya está registrado
+		$registro = Registro::where('usuario_id', $_SESSION['id']);
+		if(isset($registro) && $registro->paquete_id === Paquete::GRATIS) {
+			header('Location: /boleto?id=' . urlencode($registro->token));
+			exit;
+		}
 		// Crear registro
 		$datos = array(
 			'paquete_id' => 3,
@@ -65,5 +72,27 @@ class RegistroController {
 			'pass' => Pass::class,
 			'registro' => $registro
 		]);
+	}
+
+	public static function pagar(Router $router){
+		solo_auth();
+		// Validar que Post no venga vacío
+		if(empty($_POST)) {
+			echo json_encode([]);
+			return;
+		}
+
+		// Crear registro
+		$datos = $_POST;
+		$datos['token'] = substr(md5(uniqid( rand(), true)), 0, 8);
+		$datos['usuario_id'] = $_SESSION['id'];
+		
+		try {
+			$registro = new Registro($datos);
+			$resultado = $registro->guardar();
+			echo json_encode($resultado);
+		} catch (\Throwable $th) {
+			echo json_encode($resultado);
+		}
 	}
 }
