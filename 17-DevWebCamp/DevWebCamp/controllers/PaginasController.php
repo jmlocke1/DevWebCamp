@@ -52,7 +52,7 @@ class PaginasController {
 		]);
 	}
 
-	private static function getEventosFormateados() {
+	public static function getEventosFormateados() {
 		$eventos = Evento::ordenar('hora_id', 'ASC');
 
 		$eventos_formateados = [];

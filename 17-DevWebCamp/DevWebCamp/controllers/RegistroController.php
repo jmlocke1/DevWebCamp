@@ -95,4 +95,20 @@ class RegistroController {
 			echo json_encode($resultado);
 		}
 	}
+
+	public static function conferencias(Router $router){
+		solo_auth();
+
+		// Validar que el usuario tenga el plan presencial
+		$registro = Registro::where('usuario_id', $_SESSION['id']);
+		if(!$registro || $registro->paquete_id !== Paquete::PRESENCIAL){
+			header('Location: /');
+			return;
+		}
+		
+		$router->render('registro/conferencias', [
+			'titulo' => 'Elige Workshops y Conferencias',
+			'eventos' => PaginasController::getEventosFormateados()
+		]);
+	}
 }

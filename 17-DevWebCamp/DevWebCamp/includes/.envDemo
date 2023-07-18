@@ -1,0 +1,11 @@
+DB_HOST=localhost
+DB_USER=dbUserName
+DB_PASS=dbPassword
+DB_NAME=devwebcamp
+
+EMAIL_HOST=smtp.mailtrap.io
+EMAIL_PORT=2525
+EMAIL_USER=userCode
+EMAIL_PASS=emailPassword
+
+HOST=https://devwebcamp.test
