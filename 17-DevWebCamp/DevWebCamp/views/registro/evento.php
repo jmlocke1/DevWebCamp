@@ -4,7 +4,7 @@
 						<div class="evento__informacion">
 							<h4 class="evento__nombre" title="<?= $evento->nombre; ?>"><?= $evento->nombre; ?></h4>
 							
-							<p class="evento__introduccion"><?= $evento->descripcion; ?></p>
+							<p class="evento__introduccion" title="<?= $evento->descripcion; ?>"><?= $evento->descripcion; ?></p>
 							
 							<div class="evento__autor-info">
 								<?= $evento->ponente->getImagenHTML('evento__imagen-autor'); ?>
