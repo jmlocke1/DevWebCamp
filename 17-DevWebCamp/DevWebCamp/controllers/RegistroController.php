@@ -4,9 +4,12 @@ namespace Controllers;
 
 use MVC\Router;
 use Classes\Pass;
+use Model\Evento;
 use Model\Paquete;
+use Model\Regalo;
 use Model\Usuario;
 use Model\Registro;
+use mysqli_sql_exception;
 
 class RegistroController {
 	public static function crear(Router $router){
@@ -105,10 +108,78 @@ class RegistroController {
 			header('Location: /');
 			return;
 		}
+
+		$regalos = Regalo::all('ASC');
 		
 		$router->render('registro/conferencias', [
 			'titulo' => 'Elige Workshops y Conferencias',
-			'eventos' => PaginasController::getEventosFormateados()
+			'eventos' => PaginasController::getEventosFormateados(),
+			'regalos' => $regalos
+		]);
+	}
+
+	public static function conferenciasPost(Router $router){
+		solo_auth();
+
+		$eventos = explode(',', $_POST['eventos']);
+		if(empty($eventos)) {
+			Registro::setAlerta('error', 'No has seleccionado ningún evento, selecciona al menos uno');
+			echo json_encode([
+				'resultado' => false,
+				'alertas' => Registro::getAlertas()
+			]);
+			return;
+		}
+		// Obtener el registro de usuario
+		$registro = Registro::where('usuario_id', $_SESSION['id']);
+		if(!isset($registro) || $registro->paquete_id !== Paquete::PRESENCIAL) {
+			Registro::setAlerta('error', 'No estás correctamente registrado');
+			echo json_encode([
+				'resultado' => false,
+				'alertas' => Registro::getAlertas()
+			]);
+			return;
+		}
+		// Iniciamos la transacción
+		$transaction = Registro::begin_transaction();
+		if(!$transaction){
+			echo json_encode([
+				'resultado' => $transaction,
+				'alertas' => Registro::getAlertas()
+			]);
+			return;
+		}
+		try {
+			foreach($eventos as $evento_id) {
+				$evento = Evento::findForUpdate($evento_id);
+				if(!isset($evento)) {
+					throw new mysqli_sql_exception('Uno de los eventos solicitados tiene un id incorrecto');
+				}
+				if($evento->disponibles === "0") {
+					throw new mysqli_sql_exception("El evento {$evento->nombre} no tiene plazas disponibles");
+				}
+				$evento->disponibles -= 1;
+				$resultado = $evento->guardar();
+				if(!$resultado['resultado']){
+					Registro::setAlerta('error', $resultado['error']);
+					throw new mysqli_sql_exception("El evento {$evento->nombre} no se ha podido actualizar");
+				}
+			}
+			// Si el código llega hasta aquí sin errores, guardamos todos los cambios en la base de datos
+			Registro::commit();
+		} catch (mysqli_sql_exception $exception) {
+			Registro::rollback();
+			Registro::setAlerta('error', $registro->getMessage());
+			echo json_encode([
+				'resultado' => $transaction,
+				'alertas' => Registro::getAlertas()
+			]);
+			return;
+		}
+		Registro::setAlerta('exito', "Se han guardado correctamente todos los eventos");
+		echo json_encode([
+			'resultado' => true,
+			'alertas' => Registro::getAlertas()
 		]);
 	}
 }

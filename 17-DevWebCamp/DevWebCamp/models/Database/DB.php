@@ -1,8 +1,6 @@
 <?php
 namespace Model\Database;
 
-
-//require_once dirname(dirname(__DIR__))."/includes/config/Config.php";
 class DB {
     protected static $db;
     private $query;
@@ -36,8 +34,6 @@ class DB {
      * Devuelve una conexión a la base de datos
      */
     public static function conectarDB() {
-        
-        //self::$db = new \mysqli(\Config::DB_HOST, \Config::DB_USER, \Config::DB_PASSWORD, \Config::DB_NAME);
         self::$db = new \mysqli(
             $_ENV['DB_HOST'] ?? '',
             $_ENV['DB_USER'] ?? '', 
@@ -156,5 +152,38 @@ class DB {
     public static function escape_string($value){
         self::hayDB();
         return self::$db->escape_string($value);
+    }
+
+    public static function begin_transaction(): bool {
+        self::hayDB();
+        $ok = self::$db->begin_transaction();
+        if(!$ok || self::$db->errno){
+            self::$errors[] = "Error ".self::$db->errno.". No se pudo iniciar la transacción: ".self::$db->error;
+        }
+        return $ok;
+    }
+
+    public static function commit(): bool {
+        if(!isset(self::$db)){
+            self::$errors[] = "No hay conexión establecida, por lo que no se ha podido iniciar la transacción";
+            return false; // Para hacer un commit tiene que haber conexión
+        }
+        $ok = self::$db->commit();
+        if(!$ok || self::$db->errno){
+            self::$errors[] = "Error ".self::$db->errno.". No se pudo realizar el commit: ".self::$db->error;
+        }
+        return $ok;
+    }
+
+    public static function rollback() {
+        if(!isset(self::$db)){
+            self::$errors[] = "No hay conexión establecida, por lo que no se ha podido iniciar la transacción";
+            return false; // Para hacer un commit tiene que haber conexión
+        }
+        $ok = self::$db->rollback();
+        if(!$ok || self::$db->errno){
+            self::$errors[] = "Error ".self::$db->errno.". No se pudo realizar el rollback: ".self::$db->error;
+        }
+        return $ok;
     }
 }

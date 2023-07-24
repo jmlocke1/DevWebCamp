@@ -98,7 +98,7 @@ class AuthController {
                     $email->enviarConfirmacion();
                     
 
-                    if($resultado) {
+                    if($resultado['resultado']) {
                         header('Location: /mensaje');
                     }
                 }
@@ -194,7 +194,7 @@ class AuthController {
                 $resultado = $usuario->guardar();
 
                 // Redireccionar
-                if($resultado) {
+                if($resultado['resultado']) {
                     header('Location: /login');
                 }
             }

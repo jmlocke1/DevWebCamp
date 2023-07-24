@@ -13,7 +13,7 @@ class ActiveRecord {
      */
     public $id;
     // Base DE DATOS
-    protected static $db;
+    protected static $db = DB::class;
     protected static $tabla = '';
     protected static $columnasDB = [];
     protected static $where = '';
@@ -102,11 +102,16 @@ class ActiveRecord {
     // Consulta SQL para crear un objeto en Memoria
     public static function consultarSQL($query) {
         // Consultar la base de datos
-        $resultado = DB::getQueryArray($query);
+        $resultado = self::$db::getQueryArray($query);
         // Iterar los resultados
         $array = [];
         foreach($resultado as $registro){
             $array[] = static::crearObjeto($registro);
+        }
+        // Obtener las alertas de la base de datos, si las hay
+        $alertas = self::$db::getErrors();
+        if(!empty($alertas)){
+            self::addAlertasError($alertas);
         }
         // retornar los resultados
         return $array;
@@ -121,7 +126,6 @@ class ActiveRecord {
                 $objeto->$key = $value;
             }
         }
-
         return $objeto;
     }
 
@@ -143,9 +147,8 @@ class ActiveRecord {
             if(is_null($value)){
                 $sanitizado[$key] = $value;
             }else{
-                $sanitizado[$key] = DB::escape_string($value);
+                $sanitizado[$key] = self::$db::escape_string($value);
             }
-            
         }
         return $sanitizado;
     }
@@ -176,18 +179,7 @@ class ActiveRecord {
         return $object;
     }
 
-    // Registros - CRUD
-    public function guardar() {
-        $resultado = '';
-        if(!is_null($this->id)) {
-            // actualizar
-            $resultado = $this->actualizar();
-        } else {
-            // Creando un nuevo registro
-            $resultado = $this->crear();
-        }
-        return $resultado;
-    }
+    
 
     // Todos los registros
     public static function all($orden = 'DESC') {
@@ -197,11 +189,28 @@ class ActiveRecord {
     }
 
     // Busca un registro por su id
-public static function find(array|int $id) {
-    $query = "SELECT * FROM " . static::$tabla  ." WHERE id = {$id}";
-    $resultado = self::consultarSQL($query);
-    return array_shift( $resultado ) ;
-}
+    public static function find(array|int $id) {
+        $query = "SELECT * FROM " . static::$tabla  ." WHERE id = {$id}";
+        $resultado = self::consultarSQL($query);
+        return array_shift( $resultado ) ;
+    }
+
+    
+    /**
+     * Encuentra un registro mediante un select for update, bloqueando el registro
+     * para su actualización
+     *
+     * @param array|integer $id Clave o claves primarias para encontrar el registro
+     * @return static
+     */
+    public static function findForUpdate(array|int $id): static {
+        $query = "SELECT * FROM " . static::$tabla  ." WHERE id = {$id} FOR UPDATE";
+        $resultado = self::consultarSQL($query);
+        return array_shift( $resultado ) ;
+    }
+
+    
+
 
     // Obtener Registros con cierta cantidad
     public static function get($limite, $offset = null) {
@@ -244,7 +253,7 @@ public static function find(array|int $id) {
         if($columna){
             $query .= " WHERE {$columna} = {$valor}";
         }
-        $resultado = DB::query($query);
+        $resultado = self::$db::query($query);
         $total = $resultado->fetch_array();
         return (int) array_shift($total);
     }
@@ -269,6 +278,19 @@ public static function find(array|int $id) {
         return $resultado;
     }
 
+    // Registros - CRUD
+    public function guardar() {
+        $resultado = '';
+        if(!is_null($this->id)) {
+            // actualizar
+            $resultado = $this->actualizar();
+        } else {
+            // Creando un nuevo registro
+            $resultado = $this->crear();
+        }
+        return $resultado;
+    }
+
     // crea un nuevo registro
     public function crear() {
         // Sanitizar los datos
@@ -281,17 +303,16 @@ public static function find(array|int $id) {
         $query .= join("', '", array_values($atributos));
         $query .= "') ";
         // Resultado de la consulta
-        $resultado = DB::query($query);
+        $resultado = self::$db::query($query);
         if($resultado){
             $respuesta = [
                 'resultado' =>  $resultado,
-                'id' => DB::getId()
+                'id' => self::$db::getId()
              ];
         }else{
             $respuesta = [
                 'resultado' => $resultado,
-                "error" => DB::getLastError()
-
+                "error" => self::$db::getLastError()
             ];
         }
         return $respuesta;
@@ -311,20 +332,53 @@ public static function find(array|int $id) {
         // Consulta SQL
         $query = "UPDATE " . static::$tabla ." SET ";
         $query .=  join(', ', $valores );
-        $query .= " WHERE id = '" . DB::escape_string($this->id) . "' ";
+        $query .= " WHERE id = '" . self::$db::escape_string($this->id) . "' ";
         $query .= " LIMIT 1 "; 
         // Actualizar BD
-        $resultado = DB::query($query);
-        return $resultado;
+        $resultado = self::$db::query($query);
+        if($resultado) {
+            $respuesta = [
+                'resultado' => $resultado
+            ];
+        } else {
+            $respuesta = [
+                'resultado' => $resultado,
+                "error" => self::$db::getLastError()
+            ];
+        }
+        return $respuesta;
     }
 
     // Eliminar un Registro por su ID
     public function eliminar() {
-        $query = "DELETE FROM "  . static::$tabla . " WHERE id = '" . DB::escape_string($this->id) . "' LIMIT 1";
+        $query = "DELETE FROM "  . static::$tabla . " WHERE id = '" . self::$db::escape_string($this->id) . "' LIMIT 1";
         //$resultado = self::$db->query($query);
-        $resultado = DB::query($query);
+        $resultado = self::$db::query($query);
 
         return $resultado;
     }
 
+    public static function begin_transaction(): bool {
+        $ok = self::$db::begin_transaction();
+        if(!$ok){
+            self::setAlerta('error', self::$db::getLastError());
+        }
+        return $ok;
+    }
+
+    public static function commit(): bool {
+        $ok = self::$db::commit();
+        if(!$ok){
+            self::setAlerta('error', self::$db::getLastError());
+        }
+        return $ok;
+    }
+
+    public static function rollback(): bool {
+        $ok = self::$db::rollback();
+        if(!$ok){
+            self::setAlerta('error', self::$db::getLastError());
+        }
+        return $ok;
+    }
 }

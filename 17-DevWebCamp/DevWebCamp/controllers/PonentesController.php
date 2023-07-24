@@ -55,7 +55,7 @@ class PonentesController {
 		if(empty($alertas)){
 			// Guardar en la BD
 			$resultado = $ponente->guardar();
-			if($resultado){
+			if($resultado['resultado']){
 				header('Location: /admin/ponentes');
 				die();
 			}
@@ -96,7 +96,7 @@ class PonentesController {
 		if(empty($alertas)){
 			// Guardar en la BD
 			$resultado = $ponente->guardar();
-			if($resultado){
+			if($resultado['resultado']){
 				header('Location: /admin/ponentes');
 				die();
 			}

@@ -53,7 +53,7 @@ class EventosController {
 			$alertas = $evento->validar();
 			if(empty($alertas)){
 				$resultado = $evento->guardar();
-				if($resultado) {
+				if($resultado['resultado']) {
 					header('Location: /admin/eventos');
 					die();
 				}
@@ -91,7 +91,7 @@ class EventosController {
 			$alertas = $evento->validar();
 			if(empty($alertas)){
 				$resultado = $evento->guardar();
-				if($resultado) {
+				if($resultado['resultado']) {
 					header('Location: /admin/eventos');
 					die();
 				}
