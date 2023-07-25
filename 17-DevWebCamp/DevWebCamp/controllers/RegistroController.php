@@ -5,6 +5,7 @@ namespace Controllers;
 use MVC\Router;
 use Classes\Pass;
 use Model\Evento;
+use Model\EventosRegistros;
 use Model\Paquete;
 use Model\Regalo;
 use Model\Usuario;
@@ -121,9 +122,20 @@ class RegistroController {
 	public static function conferenciasPost(Router $router){
 		solo_auth();
 
+		// Validamos los eventos que nos vienen del cliente
 		$eventos = explode(',', $_POST['eventos']);
 		if(empty($eventos)) {
 			Registro::setAlerta('error', 'No has seleccionado ningún evento, selecciona al menos uno');
+			echo json_encode([
+				'resultado' => false,
+				'alertas' => Registro::getAlertas()
+			]);
+			return;
+		}
+		// Validamos el regalo
+		$regalo_id = $_POST['regalo_id'] ?? '';
+		if(empty($regalo_id)){
+			Registro::setAlerta('error', 'No has seleccionado ningún regalo, selecciona uno');
 			echo json_encode([
 				'resultado' => false,
 				'alertas' => Registro::getAlertas()
@@ -164,14 +176,31 @@ class RegistroController {
 					Registro::setAlerta('error', $resultado['error']);
 					throw new mysqli_sql_exception("El evento {$evento->nombre} no se ha podido actualizar");
 				}
+				// Almacenar el registro
+				$datos = [
+					'evento_id' => (int) $evento->id,
+					'registro_id' => (int) $registro->id
+				];
+				$registro_usuario = new EventosRegistros($datos);
+				$resultado = $registro_usuario->guardar();
+				if(!$resultado['resultado']){
+					Registro::setAlerta('error', $resultado['error']);
+					throw new mysqli_sql_exception("La relación (Pase Presencial - {$evento->nombre}) no se ha podido crear");
+				}
+			}
+			$registro->sincronizar(['regalo_id' => $regalo_id]);
+			$resultado = $registro->guardar();
+			if(!$resultado['resultado']){
+				Registro::setAlerta('error', $resultado['error']);
+				throw new mysqli_sql_exception("El registro de Pase Presencial no se ha podido actualizar");
 			}
 			// Si el código llega hasta aquí sin errores, guardamos todos los cambios en la base de datos
 			Registro::commit();
 		} catch (mysqli_sql_exception $exception) {
 			Registro::rollback();
-			Registro::setAlerta('error', $registro->getMessage());
+			Registro::setAlerta('error', $exception->getMessage());
 			echo json_encode([
-				'resultado' => $transaction,
+				'resultado' => false,
 				'alertas' => Registro::getAlertas()
 			]);
 			return;
@@ -179,7 +208,8 @@ class RegistroController {
 		Registro::setAlerta('exito', "Se han guardado correctamente todos los eventos");
 		echo json_encode([
 			'resultado' => true,
-			'alertas' => Registro::getAlertas()
+			'alertas' => Registro::getAlertas(),
+			'token' => $registro->token
 		]);
 	}
 }
