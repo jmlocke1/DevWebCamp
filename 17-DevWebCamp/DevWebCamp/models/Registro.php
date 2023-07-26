@@ -17,10 +17,10 @@ class Registro extends ActiveRecord {
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? null;
-        $this->paquete_id = $args['paquete_id'] ?? '';
-        $this->pago_id = $args['pago_id'] ?? '';
+        $this->paquete_id = $args['paquete_id'] ?? null;
+        $this->pago_id = $args['pago_id'] ?? null;
         $this->token = $args['token'] ?? '';
-        $this->usuario_id = $args['usuario_id'] ?? '';
+        $this->usuario_id = $args['usuario_id'] ?? null;
         $this->regalo_id = $args['regalo_id'] ?? null;
     }
 }

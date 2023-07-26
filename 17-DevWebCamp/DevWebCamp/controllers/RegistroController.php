@@ -22,7 +22,7 @@ class RegistroController {
 			exit;
 		}
 
-		if($registro->paquete_id === Paquete::PRESENCIAL) {
+		if(isset($registro) && $registro->paquete_id === Paquete::PRESENCIAL) {
 			header('Location: /finalizar-registro/conferencias');
 		}
 		
