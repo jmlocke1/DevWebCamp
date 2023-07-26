@@ -104,6 +104,31 @@ import Swal from "sweetalert2";
 			});
 			const resultado = await respuesta.json();
 			console.log(resultado);
+
+			if(resultado.resultado){
+				Swal.fire({
+					icon: 'success',
+					title: 'Registro exitoso',
+					html: mensajeAlertas(resultado.alertas)
+				}).then( () => location.href = `/boleto?id=${resultado.token}`);
+			}else {
+				Swal.fire({
+					title: 'Error',
+					html: mensajeAlertas(resultado.alertas),
+					icon: 'error',
+					confirmButtonText: 'OK'
+				}).then( () => location.reload());
+			}
+		}
+
+		function mensajeAlertas(alertas) {
+			let html = '';
+			Object.keys(alertas).forEach(tipo => {
+				alertas[tipo].forEach(mensaje => {
+					html += `<div class="alerta alerta__${tipo}">${mensaje}</div>`;
+				});
+			});
+			return html;
 		}
 	}
 	

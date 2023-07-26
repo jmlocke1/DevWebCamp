@@ -21,6 +21,10 @@ class RegistroController {
 			header('Location: /boleto?id=' . urlencode($registro->token));
 			exit;
 		}
+
+		if($registro->paquete_id === Paquete::PRESENCIAL) {
+			header('Location: /finalizar-registro/conferencias');
+		}
 		
 		$router->render('registro/crear', [
 			'titulo' => 'Finalizar Registro',
@@ -108,6 +112,10 @@ class RegistroController {
 		if(!$registro || $registro->paquete_id !== Paquete::PRESENCIAL){
 			header('Location: /');
 			return;
+		}
+		// Redireccionar a boleto virtual en caso de haber finalizado su registro
+		if(isset($registro->regalo_id)) {
+			header('Location: /boleto?id=' . urlencode($registro->token));
 		}
 
 		$regalos = Regalo::all('ASC');
