@@ -17,13 +17,15 @@ class RegistroController {
 		solo_auth();
 		// Verificar si el usuario ya está registrado
 		$registro = Registro::where('usuario_id', $_SESSION['id']);
-		if(isset($registro) && $registro->paquete_id === Paquete::GRATIS) {
+		if(isset($registro) && ($registro->paquete_id === Paquete::GRATIS || $registro->paquete_id === Paquete::VIRTUAL)) {
 			header('Location: /boleto?id=' . urlencode($registro->token));
-			exit;
+			return;
 		}
+
 
 		if(isset($registro) && $registro->paquete_id === Paquete::PRESENCIAL) {
 			header('Location: /finalizar-registro/conferencias');
+			return;
 		}
 		
 		$router->render('registro/crear', [
@@ -53,6 +55,7 @@ class RegistroController {
 		$resultado = $registro->guardar();
 		if($resultado['resultado']){
 			header('Location: /boleto?id=' . urlencode($registro->token));
+			return;
 		}
 	}
 
@@ -73,6 +76,7 @@ class RegistroController {
 		
 		if(!$registro){
 			header('Location: /');
+			return;
 		}
 
 		$router->render('registro/boleto', [
@@ -109,13 +113,20 @@ class RegistroController {
 
 		// Validar que el usuario tenga el plan presencial
 		$registro = Registro::where('usuario_id', $_SESSION['id']);
-		if(!$registro || $registro->paquete_id !== Paquete::PRESENCIAL){
+
+		if(isset($registro) && $registro->paquete_id === Paquete::VIRTUAL) {
+			header('Location: /boleto?id=' . urlencode($registro->token));
+			return;
+		}
+
+		if(!isset($registro) || $registro->paquete_id !== Paquete::PRESENCIAL){
 			header('Location: /');
 			return;
 		}
 		// Redireccionar a boleto virtual en caso de haber finalizado su registro
-		if(isset($registro->regalo_id)) {
+		if(isset($registro->regalo_id) && $registro->paquete_id === Paquete::PRESENCIAL) {
 			header('Location: /boleto?id=' . urlencode($registro->token));
+			return;
 		}
 
 		$regalos = Regalo::all('ASC');
