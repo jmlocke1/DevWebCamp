@@ -213,11 +213,12 @@ class ActiveRecord {
 
 
     // Obtener Registros con cierta cantidad
-    public static function get($limite, $offset = null) {
-        $query = "SELECT * FROM " . static::$tabla . " LIMIT {$limite}";
+    public static function get($limite, $offset = null, $order = 'ASC') {
+        $query = "SELECT * FROM " . static::$tabla . " ORDER BY id {$order} LIMIT {$limite}";
         if(!is_null($offset)){
             $query .= " OFFSET {$offset}";
         }
+        
         $resultado = self::consultarSQL($query);
         return $resultado;
     }
