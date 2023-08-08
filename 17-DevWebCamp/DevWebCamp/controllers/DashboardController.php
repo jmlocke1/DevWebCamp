@@ -23,9 +23,13 @@ class DashboardController {
 		$virtuales = Registro::total('paquete_id', Paquete::VIRTUAL);
 		$presenciales = Registro::total('paquete_id', Paquete::PRESENCIAL);
 
+		$ingresos = ($virtuales * Paquete::VIRTUAL_PASS_REAL) + ($presenciales * Paquete::FACE_TO_FACE_PASS_REAL);
+		
+
 		$router->render('admin/dashboard/index', [
 			'titulo' => 'Panel de Administración',
-			'registros' => $registros
+			'registros' => $registros,
+			'ingresos' => $ingresos
 		]);
 	}
 }

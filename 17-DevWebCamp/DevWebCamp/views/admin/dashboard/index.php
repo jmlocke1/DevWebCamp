@@ -13,5 +13,10 @@
 				</div>
 			<?php } ?>
 		</div>
+		<div class="bloque">
+			<h3 class="bloque__heading">Ingresos</h3>
+
+			<p class="bloque__texto--cantidad">$ <?= $ingresos; ?></p>
+		</div>
 	</div>
 </div>

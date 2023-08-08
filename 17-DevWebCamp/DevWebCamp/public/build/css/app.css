@@ -1564,6 +1564,11 @@ h3 {
   width: min(95%, 140rem);
   margin: 0 auto;
 }
+@media (min-width: 1024px) {
+  .bloques {
+    margin-top: 10rem;
+  }
+}
 .bloques__grid {
   display: grid;
   gap: 3rem;
@@ -1585,12 +1590,21 @@ h3 {
 .bloque:nth-child(1) {
   background-image: linear-gradient(to left top, #F97316, #fba061);
 }
+.bloque:nth-child(2) {
+  background-image: linear-gradient(to left top, #A855F7, #cd9efa);
+}
 .bloque__heading {
   margin: 1rem 0 2rem 0;
   font-size: 3.6rem;
 }
 .bloque__texto {
   margin: 1rem 0;
+}
+.bloque__texto--cantidad {
+  margin-top: 5rem;
+  font-weight: 900;
+  font-size: 6rem;
+  text-align: center;
 }
 
 .eventos-registro {
