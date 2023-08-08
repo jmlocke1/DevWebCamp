@@ -30,7 +30,7 @@ class RegistroController {
 		
 		$router->render('registro/crear', [
 			'titulo' => 'Finalizar Registro',
-			'pass' => Pass::class
+			'pass' => Paquete::class
 		]);
 	}
 
@@ -81,7 +81,7 @@ class RegistroController {
 
 		$router->render('registro/boleto', [
 			'titulo' => 'Asistencia a DevWebCamp',
-			'pass' => Pass::class,
+			'pass' => Paquete::class,
 			'registro' => $registro
 		]);
 	}

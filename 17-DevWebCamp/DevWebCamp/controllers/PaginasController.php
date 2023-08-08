@@ -9,6 +9,7 @@ use MVC\Router;
 use Model\Evento;
 use Model\Ponente;
 use Model\Categoria;
+use Model\Paquete;
 
 class PaginasController {
 	public static function index(Router $router) {
@@ -39,7 +40,7 @@ class PaginasController {
 
 		$router->render('paginas/paquetes', [
 			'titulo' => 'Paquetes DevWebCamp',
-			'pass' => Pass::class
+			'pass' => Paquete::class
 		]);
 	}
 
