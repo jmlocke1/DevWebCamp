@@ -231,11 +231,21 @@ class ActiveRecord {
     }
 
     // Retornar los registros por un orden
-    public static function ordenar($columna, $orden) {
+    public static function ordenar($columna, $orden, $limite = 0): array {
         $query = "SELECT * FROM " . static::$tabla  ." ORDER BY {$columna} {$orden}";
+        if($limite > 0) {
+            $query .= " LIMIT {$limite}";
+        }
         $resultado = self::consultarSQL($query);
         return $resultado;
     }
+
+    // Retornar los registros por orden y con un límite
+    // public static function ordenar($columna, $orden) {
+    //     $query = "SELECT * FROM " . static::$tabla  ." ORDER BY {$columna} {$orden}";
+    //     $resultado = self::consultarSQL($query);
+    //     return $resultado;
+    // }
 
     // Búsqueda Where con múltiples opciones
     public static function whereArray($array = []) {

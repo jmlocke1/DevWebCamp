@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Model\Evento;
 use Model\Paquete;
 use Model\Registro;
 use Model\Usuario;
@@ -25,11 +26,16 @@ class DashboardController {
 
 		$ingresos = ($virtuales * Paquete::VIRTUAL_PASS_REAL) + ($presenciales * Paquete::FACE_TO_FACE_PASS_REAL);
 		
-
+		// Obtener eventos con más y menos lugares disponibles
+		$menos_disponibles = Evento::ordenar('disponibles', 'ASC', 5);
+		$mas_disponibles = Evento::ordenar('disponibles', 'DESC', 5);
+		
 		$router->render('admin/dashboard/index', [
 			'titulo' => 'Panel de Administración',
 			'registros' => $registros,
-			'ingresos' => $ingresos
+			'ingresos' => $ingresos,
+			'menos_disponibles' => $menos_disponibles,
+			'mas_disponibles' => $mas_disponibles
 		]);
 	}
 }
