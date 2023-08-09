@@ -47,7 +47,7 @@ function javascript() {
                     }
                 ]
             },
-            mode: 'production',
+            mode: 'development',
             watch: true,
             entry: './src/js/app.js'
         }))

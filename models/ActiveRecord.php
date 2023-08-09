@@ -269,6 +269,18 @@ class ActiveRecord {
         return (int) array_shift($total);
     }
 
+    public static function totalArray($array = []):int {
+        $query = "SELECT COUNT(*) FROM " . static::$tabla . " WHERE ";
+        $and = '';
+        foreach($array as $key => $value){
+            $query .= $and . " {$key}='{$value}'";
+            $and = " AND";
+        }
+        $resultado = self::$db::query($query);
+        $total = $resultado->fetch_array();
+        return (int) array_shift($total);
+    }
+
     // Busca un registro por el valor de una columna
     public static function belongsTo($columna, $valor) {
         $query = "SELECT * FROM " . static::$tabla  ." WHERE {$columna} = '{$valor}'";
