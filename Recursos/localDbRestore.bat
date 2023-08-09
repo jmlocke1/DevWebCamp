@@ -1,0 +1,1 @@
+mysql -u usprueba -pusprueba devwebcamp < devwebcamp.sql

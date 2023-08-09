@@ -1,0 +1,16 @@
+Options +FollowSymLinks
+RewriteEngine On
+# Redirige la url a una url segura con https
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Establecemos la lectura inicial en el directorio raíz
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+# Elimina la barra final
+RewriteRule ^(.*)/+$ $1 [R=301,L]
+# Las peticiones a la carpeta build no se redireccionan a index
+RewriteCond %{REQUEST_URI} !^/build [NC]
+# Redirige a index.php
+Rewriterule ^(.*)$ index.php
