@@ -22,7 +22,7 @@
 			<?php foreach($menos_disponibles as $evento){ ?>
 				<div class="bloque__contenido">
 					<p class="bloque__texto">
-						<?= $evento->nombre . " " . $evento->disponibles; ?>
+						<?= $evento->nombre . " - " . $evento->disponibles; ?>
 					</p>
 				</div>
 			<?php } ?>
@@ -32,7 +32,7 @@
 			<?php foreach($mas_disponibles as $evento){ ?>
 				<div class="bloque__contenido">
 					<p class="bloque__texto">
-						<?= $evento->nombre . " " . $evento->disponibles; ?>
+						<?= $evento->nombre . " - " . $evento->disponibles; ?>
 					</p>
 				</div>
 			<?php } ?>
