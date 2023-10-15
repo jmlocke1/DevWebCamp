@@ -1,7 +1,7 @@
 <header class="header">
 	<div class="header__contenedor">
 		<nav class="header__navegacion">
-			<a href=""<?= $_ENV['PORTFOLIO']; ?> class="header__enlace">Portfolio</a>
+			<a href="<?= $_ENV['PORTFOLIO']; ?>" class="header__enlace">Portfolio</a>
 			<?php if(is_auth()) { ?>
 				<a href="<?= is_admin() ? '/admin/dashboard' : '/finalizar-registro'; ?>" class="header__enlace">Administrar</a>
 				<form method="POST" action="/logout" class="header__form">
