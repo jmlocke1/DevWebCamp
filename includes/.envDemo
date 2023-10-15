@@ -9,3 +9,4 @@ EMAIL_USER=userCode
 EMAIL_PASS=emailPassword
 
 HOST=https://devwebcamp.test
+PORTFOLIO=https://portfolio.test
