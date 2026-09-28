@@ -23,7 +23,7 @@
 
 <section class="speakers">
 	<h2 class="speakers__heading">Speakers</h2>
-	<p class="speakers__descripcion">Conoce a nuestros expertos de DevWebCamp</p>
+	<p class="speakers__descripcion">Conoce a nuestros expertos profesores de DevWebCamp</p>
 	<div class="speakers__grid">
 		<?php foreach ($ponentes as $ponente) {  ?>
 			<div <?= aos_animacion(); ?> class="speaker">
